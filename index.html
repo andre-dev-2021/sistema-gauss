@@ -3,51 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora de Sistemas de Equação</title>
+    <title>Calculadora de Sistemas Lineares</title>
+   
+    <!-- Ícones -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" 
+    
+    <!-- Estilos Bootstrap -->
+    <link 
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" 
     rel="stylesheet"
     integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" 
     crossorigin="anonymous">
-    <style>
-        html, body {
-            height: 100%;
-            margin: 0;
-            padding: 0;
-        }
+    
+    <!-- Meus estilos -->
+    <link rel="stylesheet" href="/css/style.css">
 
-        body {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .formField{
-          flex-direction: row;
-          width: 20vw;
-        }
-        .footer {
-            margin-top: auto;
-        }
-
-        .footerLink{
-            text-decoration: none;
-        }
-    </style>
 </head>
-<body>
-  <div id="liveAlertPlaceholder"></div>
+<body class="bg-light">
+
+  <!-- Região dos alertas -->
+  <span class="m-1" id="localAlertas"></span> 
+
+  <!-- Modal Ajuda -->
   <div class="p-2">
-    <button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal" style="align-items: center;">
+    <button 
+      type="button" 
+      class="btn btn-info btn-sm" 
+      data-bs-toggle="modal" 
+      data-bs-target="#modalAjuda" 
+      style="align-items: center;"
+      >
       <i class="material-icons"  style="font-size: 1rem;">help</i>
       Ajuda
     </button>
 
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="modalAjuda" tabindex="-1" aria-labelledby="modalAjudaLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h1 class="modal-title fs-5" id="exampleModalLabel">Como utilizar?</h1>
+            <h1 class="modal-title fs-5" id="modalAjudaLabel">Como utilizar?</h1>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
@@ -57,205 +51,74 @@
       </div>
     </div>
   </div>
+
+  <!-- Região do form -->
   <div class="container-fluid p-2 d-flex flex-row align-items-center gap-2">
     <div class="fw-semibold d-flex flex-row align-items-center gap-2">
         <label for="numInput" class="form-label mb-0">Tamanho do sistema: </label>
         <input type="number" id="numInput" class="form-control form-control-sm" style="width:70px;"/>
-        <button class="btn btn-primary btn-sm" onclick="createTable()">
-            Inserir matriz
+        <button class="btn btn-primary btn-sm" onclick="btnCriar()">
+            Criar matriz
         </button>
-        <button class="btn btn-danger btn-sm" onclick="cleanTable()">
+        <button class="btn btn-danger btn-sm" onclick="limparConteudo()">
             Limpar
         </button>
-        <span id="bottom-field"></span>
+        <span id="btn_resultado"></span>
     </div>
   </div>
-  
-  <div class="m-2 p-2 align-items-center justify-content-center" id="table"></div>
 
-  <div class="m-2 p-2 align-items-center justify-content-center text-center" id="resultado"></div>
+  <!-- Centro da página -->
+  <div class="m-2 p-2 align-items-center justify-content-center" id="content"></div>
 
+  <!-- Link no final da página -->
   <div class="footer text-center">
       <p class="text-secondary fs-6 fw-semibold">&copy 
           <a href="https://github.com/andre-dev-2021" class="footerLink">andre-dev-2021</a> 
           - Todos os direitos reservados
       </p>
   </div>
+
+  <!-- Scripts Bootstrap -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" 
   integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" 
   crossorigin="anonymous"></script>
+
+  <!-- Meus scripts -->
+  <script src="js/alerts.js"></script>
+  <script src="js/tables.js"></script>
+  <script src="js/gauss.js"></script>
   <script>
-      const appendAlert = (message, type) => {
-        const alertPlaceholder = document.getElementById('liveAlertPlaceholder');
-        const wrapper = document.createElement('div')
-        wrapper.innerHTML = [
-          `<div class="alert alert-${type} alert-dismissible" role="alert">`,
-          `   <div>${message}</div>`,
-          '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
-          '</div>'
-        ].join('')
 
-        alertPlaceholder.append(wrapper)
-
-        setTimeout(() => {
-          wrapper.innerHTML = "";
-        }, 2500);
-      }
-
-      const cleanTable = () => {
-        const tableDiv = document.getElementById('table');
-        const bottom = document.getElementById('bottom-field');
-        const resultado = document.getElementById("resultado");
-
-        tableDiv.innerHTML = "";
-        bottom.innerHTML = "";
-        resultado.innerHTML = "";
-      }
-
-      const createTable = () => {
+      const btnCriar = () => {
         const num = parseInt(document.getElementById("numInput").value);
 
         if(num >= 2 && num <= 10){
-          const tableDiv = document.getElementById('table');
-          const bottom = document.getElementById('bottom-field');
-
-          let html = '<div class="d-flex justify-content-center mt-4">';
-          html += '<table class="table table-sm table-bordered table-secondary w-auto" style="font-size:0.9rem;"><tbody>';
-
-          for (let i = 0; i < num; i++) {
-            html += '<tr>';
-            for (let j = 0; j < num + 1; j++) {
-              html += `<td style="padding:2px; width:40px; min-width:40px;">
-                <input id="${i}_${j}" type="number" class="form-control p-1" style="width:50px; height:28px; font-size:0.9rem;" inputmode="numeric" pattern="[0-9]*" onwheel="return false;" onkeydown="if(event.key==='e'||event.key==='E'){event.preventDefault();}" />
-              </td>`;
-            }
-            html += '</tr>';
-          }
-
-          html += '</tbody></table></div>';
-          tableDiv.innerHTML = html;
-
-          bottom.innerHTML = "<button type='button' class='btn btn-warning btn-sm' onclick='resolver();'>Mostrar resolução</button> "
+          criarMatriz(num);
         }else{
-          appendAlert('O tamanho do sistema deve estar entre 2 e 10!', 'danger');
+          gerarAlerta('O tamanho do sistema deve estar entre 2 e 10!', 'danger');
         }
       }
 
-      const toScalar = (M) => {
-        const n = M.length;
-
-        for (let k = 0; k < n; k++) {
-          // Pivotamento parcial
-          let maxRow = k;
-          for (let i = k + 1; i < n; i++) {
-            if (Math.abs(M[i][k]) > Math.abs(M[maxRow][k])) {
-              maxRow = i;
-            }
-          }
-          if (maxRow !== k) {
-            [M[k], M[maxRow]] = [M[maxRow], M[k]];
-          }
-
-          // Eliminação abaixo do pivô
-          for (let i = k + 1; i < n; i++) {
-            let fator = M[i][k] / M[k][k];
-            for (let j = k; j < n + 1; j++) {
-              M[i][j] -= fator * M[k][j];
-            }
-          }
-        }
-
-        return M;
-      }
-
-      const toRegular = (mtx, num) => {
-        const varNames = 'xyzabcdefg'.split('');
-        let systemStr = '';
-        for(let i = 0; i < num; i++) {
-          let eq = '';
-          for(let j = 0; j < num; j++) {
-            const coef = mtx[i][j];
-            if (coef === 0) continue;
-            if (eq.length > 0) eq += coef > 0 ? ' + ' : ' - ';
-            else if (coef < 0) eq += '-';
-            eq += (Math.abs(coef) !== 1 ? Math.abs(coef) : '') + varNames[j];
-          }
-          eq += ' = ' + mtx[i][num];
-          systemStr += '<p>' + eq + '</p>';
-        }
-        return(systemStr);
-      }
-
-      const substituicao = (M) => {
-        const n = M.length;
-
-        let x = new Array(n).fill(0);
-
-        for (let i = n - 1; i >= 0; i--) {
-          let soma = M[i][n];
-          for (let j = i + 1; j < n; j++) {
-            soma -= M[i][j] * x[j];
-          }
-
-          if(isNaN(soma)){
-            return null;
-          }
-
-          x[i] = soma / M[i][i];
-        }
-
-        return x;
-      }
+      
 
       const resolver = () => {
-        const resultado = document.getElementById("resultado");
         const num = parseInt(document.getElementById("numInput").value);
-        let mtx = [];
+        let mtx = lerValoresMatriz(num);
+        let mtxEscalonada = escalonar(mtx);
+        let tipo = verificarTipo(mtxEscalonada);
 
-        for(let i = 0; i < num; i++){
-          let l = [];
-          for(let j = 0; j < num + 1;j++){
-            const n = parseInt(document.getElementById(`${i}_${j}`).value);
-            if(isNaN(n)){
-              l.push(0);
-            }else{
-              l.push(n);
-            }
-          }
-          mtx.push(l);
+        if(tipo == "SI"){
+          gerarAlerta("Sistema sem solução!", "danger");
+        }else if(tipo == "SPI"){
+          gerarAlerta("Sistema com infinitas soluções!", "warning");
+        }else{
+          gerarAlerta("Sistema resolvido com sucesso!", "success");
+
+          let res = substituir(mtxEscalonada);
+          criarTabelaResultado(mtx, mtxEscalonada, res);
         }
         
-        let mtxEscalonada = mtx.map(row => row.slice());
-
-        let x = toRegular(mtx, num);
-        toScalar(mtxEscalonada); // modifies mtxEscalonada in place
-        let y = toRegular(mtxEscalonada, num); 
-        let res = substituicao(mtxEscalonada);
-
-        if(res != null){
-          resultado.innerHTML = [
-            '<div class="d-flex justify-content-center mt-4">',
-              '<table class="table table-sm table-bordered table-primary w-auto">',
-                '<tr class="fw-bold">',
-                  '<td>Forma regular</td>',
-                  '<td>Forma escalonada</td>',
-                  '<td>Solução</td>',
-                '</tr>',
-                '<tr class="resultados">',
-                  `<td>${x}</td>`,
-                  `<td>${y}</td>`,
-                  `<td>S = {${res}}</td>`,
-                '</tr>',
-              '</table>',
-            '</div>'
-          ].join('');
-
-          appendAlert('Resultado calculado com sucesso!', 'success');
-        } else {
-          appendAlert('Sistema com soluções infinitas ou sem solução!', 'danger')
-        }
-        
-    }
+      }
       
   </script>
 </body>
