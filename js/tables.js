@@ -54,12 +54,15 @@ const formatar = (equacoes) => {
 }
 
 const criarTabelaResultado = (mtx, mtxEscalonada, res) => {
+    limparConteudo();
+
     const div = document.getElementById("content");
     let original = formatar(equacao(mtx, mtx.length));
     let escalonada = formatar(equacao(mtxEscalonada, mtxEscalonada.length));
 
     div.innerHTML += [
-        `<table class="table">`,
+        `<div class="d-flex justify-content-center mt-4">`,
+        `<table class="table w-auto text-center">`,
             `<thead>`,
                 `<tr>`,
                     `<th>Sistema original</th>`,
@@ -71,9 +74,10 @@ const criarTabelaResultado = (mtx, mtxEscalonada, res) => {
                 `<tr class="resultados">`,
                     `<td><i>${original}</i></td>`,
                     `<td><i>${escalonada}</i></td>`,
-                    `<td><math><mrow><mi>S</mi><mo>=</mo><mn>{${res}}</mn></mrow></math></td>`,
+                    `<td>${res}</td>`,
                 `</tr>`,
             `</tbody>`,
-        `</table>`
+        `</table>`,
+        `</div>`
     ].join('');
 }

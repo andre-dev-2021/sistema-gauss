@@ -45,7 +45,12 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            ...
+            <h6>1. Insira o tamanho do sistema (nº de incógnitas).</h3>
+            <p>Isso criará uma matriz <em>A|b</em> de tamanho <em>n X n+1</em> (Limitado para entre 2 e 10 linhas)</p>
+            <h6>2. Insira os coeficientes e termos independentes</h6>
+            <p>Insira os valores de acordo com a ordem na matriz.</p>
+            <h6>3. Clique em 'Mostrar resultado' para calcular a solução</h6>
+            <p>O sistema exibirá o sistema original, seu equivalente escalonado e a solução (se possuir).</p>
           </div>
         </div>
       </div>
@@ -109,12 +114,15 @@
 
         if(tipo == "SI"){
           gerarAlerta("Sistema sem solução!", "danger");
+          criarTabelaResultado(mtx, mtxEscalonada, "Sem solução!")
         }else if(tipo == "SPI"){
           gerarAlerta("Sistema com infinitas soluções!", "warning");
+          criarTabelaResultado(mtx, mtxEscalonada, "Infinitas soluções")
         }else{
           gerarAlerta("Sistema resolvido com sucesso!", "success");
 
-          let res = substituir(mtxEscalonada);
+          let res = `<math><mrow><mi>S</mi><mo>=</mo><mn>{${substituir(mtxEscalonada)}}</mn></mrow></math>`;
+          
           criarTabelaResultado(mtx, mtxEscalonada, res);
         }
         
