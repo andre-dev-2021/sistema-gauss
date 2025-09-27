@@ -4,9 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calculadora de Sistemas Lineares</title>
-   
-    <!-- Ícones -->
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     
     <!-- Estilos Bootstrap -->
     <link 
@@ -15,119 +12,82 @@
     integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" 
     crossorigin="anonymous">
     
+    <!-- Font Awesome Icones -->
+    <link rel="stylesheet" 
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" 
+    integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" 
+    crossorigin="anonymous" 
+    referrerpolicy="no-referrer" />
+
     <!-- Meus estilos -->
     <link rel="stylesheet" href="/css/style.css">
-
 </head>
-<body class="bg-light">
-
-  <!-- Região dos alertas -->
-  <span class="m-1" id="localAlertas"></span> 
-
-  <!-- Modal Ajuda -->
-  <div class="p-2">
-    <button 
-      type="button" 
-      class="btn btn-info btn-sm" 
-      data-bs-toggle="modal" 
-      data-bs-target="#modalAjuda" 
-      style="align-items: center;"
-      >
-      <i class="material-icons"  style="font-size: 1rem;">help</i>
-      Ajuda
-    </button>
-
-    <div class="modal fade" id="modalAjuda" tabindex="-1" aria-labelledby="modalAjudaLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h1 class="modal-title fs-5" id="modalAjudaLabel">Como utilizar?</h1>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <h6>1. Insira o tamanho do sistema (nº de incógnitas).</h3>
-            <p>Isso criará uma matriz <em>A|b</em> de tamanho <em>n X n+1</em> (Limitado para entre 2 e 10 linhas)</p>
-            <h6>2. Insira os coeficientes e termos independentes</h6>
-            <p>Insira os valores de acordo com a ordem na matriz.</p>
-            <h6>3. Clique em 'Mostrar resultado' para calcular a solução</h6>
-            <p>O sistema exibirá o sistema original, seu equivalente escalonado e a solução (se possuir).</p>
-          </div>
+<body>
+  <div class="container-fluid">
+    <div class="row header p-2 shadow text-light">
+      <div class="col fw-semibold">
+        <h1><i class="fa-solid fa-calculator"></i>Sistemas Lineares</h1>
+      </div>
+      <div class="col-1 text-end">
+        <div class="d-flex flex-row">
+          <a href="https://github.com/andre-dev-2021/sistema-gauss" class="link-light"><h1><i class="fa-brands fa-github"></i></h1></a>
+          <h6><span class="badge text-bg-light">v.1.1</span></h6>
         </div>
       </div>
     </div>
-  </div>
 
-  <!-- Região do form -->
-  <div class="container-fluid p-2 d-flex flex-row align-items-center gap-2">
-    <div class="fw-semibold d-flex flex-row align-items-center gap-2">
-        <label for="numInput" class="form-label mb-0">Tamanho do sistema: </label>
-        <input type="number" id="numInput" class="form-control form-control-sm" style="width:70px;"/>
-        <button class="btn btn-primary btn-sm" onclick="btnCriar()">
-            Criar matriz
-        </button>
-        <button class="btn btn-danger btn-sm" onclick="limparConteudo()">
-            Limpar
-        </button>
-        <span id="btn_resultado"></span>
+    <!-- Região dos alertas -->
+    <div class="row m-1" id="localAlertas"></div>
+    
+    <!-- Form Tamanho do Sistema-->
+    <div class="row main m-1">
+      <div class="col "></div>
+      <div class="col-md-6">
+        <div class="row mt-3">
+          <div class="col p-2 bg-light-subtle rounded shadow">
+            <form id="numForm">
+              <div class="row m-2">
+                <div class="col fw-semibold text-end">
+                  <label for="numInput" class="form-label">Tamanho do sistema: </label>
+                </div>
+                <div class="col">
+                  <input type="number" id="numInput" class="form-control form-control-sm"/>
+                </div>
+                <div class="col text-end">
+                  <button class="btn btn-primary btn-sm">
+                    <i class="fa-solid fa-plus"></i>
+                    Adicionar matriz
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="row mt-3">
+          <div class="col bg-light-subtle rounded shadow align-items-center justify-content-center">
+            <div id="content"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col"></div>
     </div>
+    
+
   </div>
-
-  <!-- Centro da página -->
-  <div class="m-2 p-2 align-items-center justify-content-center" id="content"></div>
-
-  <!-- Link no final da página -->
-  <div class="footer text-center">
-      <p class="text-secondary fs-6 fw-semibold">&copy 
-          <a href="https://github.com/andre-dev-2021" class="footerLink">andre-dev-2021</a> 
-          - Todos os direitos reservados
-      </p>
-  </div>
-
   <!-- Scripts Bootstrap -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" 
   integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" 
   crossorigin="anonymous"></script>
 
+  <!-- Scripts Jquery -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" 
+  integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" 
+  crossorigin="anonymous" 
+  referrerpolicy="no-referrer"></script>
+
   <!-- Meus scripts -->
-  <script src="js/alerts.js"></script>
-  <script src="js/tables.js"></script>
-  <script src="js/gauss.js"></script>
-  <script>
-
-      const btnCriar = () => {
-        const num = parseInt(document.getElementById("numInput").value);
-
-        if(num >= 2 && num <= 10){
-          criarMatriz(num);
-        }else{
-          gerarAlerta('O tamanho do sistema deve estar entre 2 e 10!', 'danger');
-        }
-      }
-
-      
-
-      const resolver = () => {
-        const num = parseInt(document.getElementById("numInput").value);
-        let mtx = lerValoresMatriz(num);
-        let mtxEscalonada = escalonar(mtx);
-        let tipo = verificarTipo(mtxEscalonada);
-
-        if(tipo == "SI"){
-          gerarAlerta("Sistema sem solução!", "danger");
-          criarTabelaResultado(mtx, mtxEscalonada, "Sem solução!")
-        }else if(tipo == "SPI"){
-          gerarAlerta("Sistema com infinitas soluções!", "warning");
-          criarTabelaResultado(mtx, mtxEscalonada, "Infinitas soluções")
-        }else{
-          gerarAlerta("Sistema resolvido com sucesso!", "success");
-
-          let res = `<math><mrow><mi>S</mi><mo>=</mo><mn>{${substituir(mtxEscalonada)}}</mn></mrow></math>`;
-          
-          criarTabelaResultado(mtx, mtxEscalonada, res);
-        }
-        
-      }
-      
-  </script>
+  <script src="js/ui.js"></script>
+  <script src="js/math.js"></script>
 </body>
 </html>

@@ -1,23 +1,28 @@
 html, body {
-    height: 100% !important;
-    margin: 0;
-    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #f0f4ff, #d9e4f5);
+    color: #333;
 }
 
-body {
-    min-height: 100vh !important;
-    display: flex;
-    flex-direction: column;
+.header {
+    background: #4a90e2;
+    border-bottom: 3px solid #357abd;
 }
 
-.formField{
-    flex-direction: row;
-    width: 20vw;
-}
-.footer {
-    margin-top: auto;
+.resultados {
+    font-family: 'Times New Roman', Times, serif !important;
+    font-weight: 500;
 }
 
-.footerLink{
-    text-decoration: none;
+button {
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+button:hover {
+    transform: translateY(-2px);
+}
+
+button:active {
+    transform: translateY(0);
 }
