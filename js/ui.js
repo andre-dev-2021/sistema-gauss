@@ -19,8 +19,6 @@ const limparConteudo = () => {
 }
 
 const formatar = (equacoes) => {
-    // Transforma string em LaTex.
-
     let rows = equacoes.map(eq => `<mtr><mtd><mn>${eq}</mn></mtd></mtr>`).join('');
     return `<math display="block"><mo>{</mo><mtable>${rows}</mtable></math>`;
 }
@@ -112,4 +110,8 @@ const criarTabelaResultado = (mtx, mtxEscalonada, res) => {
             `</div>`,
         `</div>`
     ].join(''));
+
+    if (window.MathJax) {
+        MathJax.typesetPromise();
+    }
 }
